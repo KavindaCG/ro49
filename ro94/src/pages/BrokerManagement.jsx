@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import hook for navigation
 import { Link } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
+import { useTheme } from '../contexts/ThemeContext';
+
 import { 
   Search, 
   Filter, 
@@ -17,6 +20,7 @@ import {
 
 const BrokerManagement = () => {
   const navigate = useNavigate(); // Initialize navigation
+  const { isDarkMode } = useTheme();
 
   // 1. Broker Data State
   const [brokers, setBrokers] = useState([
@@ -74,7 +78,10 @@ const BrokerManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 ml-64 pt-24 transition-all duration-300 font-sans relative">
+    <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      <Sidebar />
+
+      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-24 transition-all duration-300 font-sans relative">
       
       <div className="p-8 max-w-[1600px] mx-auto">
         {/* HEADER */}
@@ -273,7 +280,8 @@ const BrokerManagement = () => {
         </div>
       )}
 
-    </div>
+    </main>
+  </div>
   );
 };
 

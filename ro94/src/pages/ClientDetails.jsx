@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion"; 
 import { useNavigate } from "react-router-dom"; 
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import { useTheme } from "../contexts/ThemeContext";
 import { 
   Search, 
   Filter, 
@@ -23,6 +26,8 @@ const INITIAL_DATA = [
 
 export default function ClientDetails() {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
+
   const [clients, setClients] = useState(INITIAL_DATA);
   const [selectedClients, setSelectedClients] = useState([]);
 
@@ -84,7 +89,10 @@ export default function ClientDetails() {
   };
 
   return (
-    <div className="min-h-screen w-full pl-64 pt-24 pr-8 pb-12 bg-gray-50 text-gray-900 font-sans relative">
+    <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      <Sidebar />
+
+      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-20">
       
       {/* Page Header */}
       <div className="flex flex-col gap-6 mb-8 px-8">
@@ -121,7 +129,7 @@ export default function ClientDetails() {
       </div>
 
       {/* Table Section */}
-      <div className="px-8">
+      <div className="px-8 pb-12">
         <div className="w-full bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm">
           
           {/* Table Header */}
@@ -303,6 +311,7 @@ export default function ClientDetails() {
         </div>
       )}
 
+      </main>
     </div>
   );
 }

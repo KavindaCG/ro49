@@ -5,8 +5,12 @@ import AllClients from './pages/AllClients';
 import Finance from './pages/Finance';
 import LoginSignup from './pages/LoginSignup';
 import ClientDetails from './pages/ClientDetails';
+import ClientProfile from './pages/ClientProfile';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Settings from './pages/Settings';
+import BrokerManagement from './pages/BrokerManagement';
+import BrokerDetails from './pages/BrokerDetails';
+
 import { ThemeProvider } from './contexts/ThemeContext';
 
 class ErrorBoundary extends React.Component {
@@ -61,11 +65,17 @@ class App extends React.Component {
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/clients" element={<AllClients />} />
+                <Route path="/client-details" element={<ClientDetails />} />
+
                 <Route path="/finance" element={<Finance />} />
                 <Route path="/login" element={<LoginSignup />} />
-                <Route path="/client/:id" element={<ClientDetails />} />
+                <Route path="/client/:id" element={<ClientProfile />} />
+                <Route path="/clients/:id" element={<ClientProfile />} />
+
                 <Route path="/ApplicationDetails/:id" element={<ApplicationDetails />} />
-                <Route path="/Settings" element={<Settings />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/brokers" element={<BrokerManagement />} />
+                <Route path="/brokers/:id" element={<BrokerDetails />} />
               </Routes>
             </div>
           </BrowserRouter>
