@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* FOGO palette and gentle background */
+:root {
+  --app-bg: #f3f6f8;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+}
+
+body {
+  background: var(--app-bg);
+}
+
+/* optional canvas wrapper for your main panel */
+.app-canvas {
+  @apply rounded-2xl bg-white border border-gray-100 shadow-[0_6px_30px_rgba(16,24,40,0.04)];
+}
+
+/* small card hover */
+.card-hover:hover { box-shadow: 0 8px 30px rgba(15,23,42,0.06); }
