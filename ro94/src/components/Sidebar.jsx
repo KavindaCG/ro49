@@ -10,7 +10,7 @@ import {
   Settings, 
   LogOut,
   User,
-  Briefcase // Import the icon for applications
+  Briefcase // Import Briefcase icon
 } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 
@@ -20,7 +20,7 @@ export default function Sidebar() {
   
   const links = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/applications", label: "All Applications", icon: Briefcase }, // Added "All Applications"
+    { to: "/applications", label: "Applications", icon: Briefcase }, // Added Applications link
     { to: "/clients", label: "All Clients", icon: Users },
     { to: "/client-details", label: "Client Details", icon: FileText },
     { to: "/brokers", label: "Brokers", icon: PieChart },
