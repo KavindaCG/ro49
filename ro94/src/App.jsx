@@ -1,43 +1,30 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+// --- Imports ---
+import Sidebar from './components/Sidebar'; 
 import Dashboard from './pages/Dashboard';
+import AllApplications from './pages/AllApplications'; // Imported New Page
 import AllClients from './pages/AllClients';
+import AddClient from './pages/AddClient'; // Imported New Page
+import ClientDetails from './pages/ClientDetails'; 
+import BrokerManagement from './pages/BrokerManagement'; // Imported New Page
 import Finance from './pages/Finance';
 import LoginSignup from './pages/LoginSignup';
-import AddClient from './pages/AddClient';
-import ClientDetails from './pages/ClientDetails';
-import ClientProfile from './pages/ClientProfile';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Settings from './pages/Settings';
-import BrokerManagement from './pages/BrokerManagement';
-import BrokerDetails from './pages/BrokerDetails';
-
 import { ThemeProvider } from './contexts/ThemeContext';
 
+// Error Boundary (Unchanged)
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
   }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
-  }
-
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, errorInfo) { console.error(error, errorInfo); }
   render() {
-    if (this.state.hasError) {
-      return (
-        <div className="p-4 text-red-600 bg-white dark:bg-gray-900 dark:text-red-400">
-          <h2>Something went wrong</h2>
-          <p>{this.state.error?.message}</p>
-        </div>
-      );
-    }
-
+    if (this.state.hasError) return <div className="p-4 text-red-500">Error: {this.state.error?.message}</div>;
     return this.props.children;
   }
 }
@@ -45,40 +32,54 @@ class ErrorBoundary extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isAuthenticated: true, // This should be managed by your auth service
-    };
+    this.state = { isAuthenticated: true };
   }
 
   render() {
     const { isAuthenticated } = this.state;
 
-    if (!isAuthenticated) {
-      return <Navigate to="/login" replace />;
-    }
+    if (!isAuthenticated) return <LoginSignup />;
 
     return (
       <ThemeProvider>
         <ErrorBoundary>
           <BrowserRouter>
-            <div className="app-container min-h-screen bg-gray-50 dark:bg-gray-900">
-              <Routes>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/clients" element={<AllClients />} />
-                <Route path="/client-details" element={<ClientDetails />} />
-                <Route path="/add-client" element={<AddClient />} />
+            {/* Main Layout Container */}
+            <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+              
+              {/* SIDEBAR */}
+              <Sidebar />
 
-                <Route path="/finance" element={<Finance />} />
-                <Route path="/login" element={<LoginSignup />} />
-                <Route path="/client/:id" element={<ClientProfile />} />
-                <Route path="/clients/:id" element={<ClientProfile />} />
+              {/* CONTENT AREA */}
+              <div className="flex-1">
+                <Routes>
+                  {/* Default Redirect */}
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  
+                  {/* Dashboard */}
+                  <Route path="/dashboard" element={<Dashboard />} />
 
-                <Route path="/ApplicationDetails/:id" element={<ApplicationDetails />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/brokers" element={<BrokerManagement />} />
-                <Route path="/brokers/:id" element={<BrokerDetails />} />
-              </Routes>
+                  {/* Applications Routes */}
+                  <Route path="/applications" element={<AllApplications />} />
+                  <Route path="/ApplicationDetails/:id" element={<ApplicationDetails />} />
+
+                  {/* Client Routes */}
+                  <Route path="/clients" element={<AllClients />} />
+                  <Route path="/add-client" element={<AddClient />} />
+                  <Route path="/client-details" element={<ClientDetails />} />
+                  <Route path="/clients/:id" element={<ClientDetails />} />
+
+                  {/* Broker Routes */}
+                  <Route path="/brokers" element={<BrokerManagement />} />
+
+                  {/* Finance Routes */}
+                  <Route path="/finance" element={<Finance />} />
+                  
+                  {/* Other Routes */}
+                  <Route path="/Settings" element={<Settings />} />
+                  <Route path="/login" element={<LoginSignup />} />
+                </Routes>
+              </div>
             </div>
           </BrowserRouter>
         </ErrorBoundary>

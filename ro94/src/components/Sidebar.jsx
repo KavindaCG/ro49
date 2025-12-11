@@ -9,16 +9,18 @@ import {
   CreditCard, 
   Settings, 
   LogOut,
-  User
+  User,
+  Briefcase // Import the icon for applications
 } from "lucide-react";
-import { useTheme } from "../contexts/ThemeContext"; // Import the theme hook
+import { useTheme } from "../contexts/ThemeContext";
 
 export default function Sidebar() {
   const navigate = useNavigate();
-  const { isDarkMode } = useTheme(); // Get dark mode state
+  const { isDarkMode } = useTheme();
   
   const links = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/applications", label: "All Applications", icon: Briefcase }, // Added "All Applications"
     { to: "/clients", label: "All Clients", icon: Users },
     { to: "/client-details", label: "Client Details", icon: FileText },
     { to: "/brokers", label: "Brokers", icon: PieChart },

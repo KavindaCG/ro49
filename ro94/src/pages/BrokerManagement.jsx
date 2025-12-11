@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import hook for navigation
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
@@ -12,7 +12,6 @@ import {
   TrendingUp, 
   DollarSign, 
   ArrowUpRight, 
-  ChevronDown, 
   Plus,
   Edit2,     
   Trash2,    
@@ -20,7 +19,7 @@ import {
 } from 'lucide-react';
 
 const BrokerManagement = () => {
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
 
   // 1. Broker Data State
@@ -35,43 +34,84 @@ const BrokerManagement = () => {
   // State for Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBroker, setCurrentBroker] = useState(null);
+  const [modalMode, setModalMode] = useState('edit'); // 'edit' or 'add'
+
+  // --- HELPER: Generate Next ID ---
+  const getNextBrokerId = () => {
+    if (brokers.length === 0) return 'ROB-001';
+    const ids = brokers.map(b => parseInt(b.id.split('-')[1]));
+    const maxId = Math.max(...ids);
+    const nextId = maxId + 1;
+    return `ROB-${String(nextId).padStart(3, '0')}`;
+  };
 
   // --- ACTIONS ---
 
-  // 1. Navigate to Details Page
   const handleViewProfile = (id) => {
     navigate(`/brokers/${id}`);
   };
 
-  // 2. Delete Broker
   const handleDelete = (e, id) => {
-    e.stopPropagation(); // Stop row click from triggering navigation
+    e.stopPropagation();
     if (window.confirm("Are you sure you want to delete this broker?")) {
       setBrokers(brokers.filter((broker) => broker.id !== id));
     }
   };
 
-  // 3. Open Edit Modal
   const handleEditClick = (e, broker) => {
-    e.stopPropagation(); // Stop row click from triggering navigation
+    e.stopPropagation();
+    setModalMode('edit');
     setCurrentBroker({ ...broker }); 
     setIsModalOpen(true);
   };
 
-  // 4. Handle Input Change (Modal)
+  const handleAddClick = () => {
+    const newId = getNextBrokerId();
+    setModalMode('add');
+    setCurrentBroker({
+      id: newId, 
+      name: '',
+      email: '',
+      location: '',
+      performance: 'STAGE 1', 
+      status: 'Active'
+    });
+    setIsModalOpen(true);
+  }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentBroker({ ...currentBroker, [name]: value });
   };
 
-  // 5. Save Changes
+  // --- MODIFIED SAVE FUNCTION ---
   const handleSave = () => {
-    setBrokers(brokers.map((b) => (b.id === currentBroker.id ? currentBroker : b)));
+    if (!currentBroker.name || !currentBroker.email) {
+      alert("Please fill in Name and Email");
+      return;
+    }
+
+    let finalBrokerData = { ...currentBroker };
+
+    // LOGIC: Automatically add "Agent " prefix if it's missing (Only for Add mode)
+    if (modalMode === 'add') {
+      const name = finalBrokerData.name.trim();
+      // Check if user already typed "Agent", if not, add it.
+      if (!name.toLowerCase().startsWith('agent ')) {
+        finalBrokerData.name = `Agent ${name}`;
+      }
+    }
+
+    if (modalMode === 'add') {
+      setBrokers([...brokers, finalBrokerData]);
+    } else {
+      setBrokers(brokers.map((b) => (b.id === finalBrokerData.id ? finalBrokerData : b)));
+    }
+
     setIsModalOpen(false);
     setCurrentBroker(null);
   };
 
-  // Styles Logic (Only Active/Hold)
   const getStatusStyles = (status) => {
     if (status === 'Active') return 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20';
     if (status === 'Hold') return 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20';
@@ -112,7 +152,12 @@ const BrokerManagement = () => {
           </div>
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 text-slate-600 font-medium rounded-lg hover:bg-gray-50 shadow-sm"><Filter size={18} /> Filter</button>
-            <button className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg flex items-center gap-2 shadow-md"><Plus size={18} /> Add Broker</button>
+            <button 
+              onClick={handleAddClick}
+              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg flex items-center gap-2 shadow-md"
+            >
+              <Plus size={18} /> Add Broker
+            </button>
           </div>
         </div>
 
@@ -133,20 +178,15 @@ const BrokerManagement = () => {
             <tbody className="divide-y divide-gray-100">
               {brokers.map((broker) => (
                 <tr key={broker.id} className="hover:bg-slate-50/80 transition-colors group">
-                  {/* Checkbox */}
                   <td className="px-6 py-4"><input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" /></td>
-                  
-                  {/* ID */}
                   <td className="px-6 py-4 text-sm font-mono text-slate-500">{broker.id}</td>
-                  
-                  {/* CLICKABLE PROFILE AREA */}
                   <td className="px-6 py-4">
                     <div 
                         onClick={() => handleViewProfile(broker.id)}
                         className="flex items-center gap-3 cursor-pointer group/profile"
                     >
                       <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-xs border border-slate-200 group-hover/profile:border-blue-300 transition-colors">
-                          {broker.name.substring(0,2).toUpperCase()}
+                          {broker.name.replace('Agent ', '').substring(0,2).toUpperCase()}
                       </div>
                       <div className="flex flex-col">
                           <Link to={`/brokers/${broker.id}`} onClick={(e) => e.stopPropagation()} className="text-sm font-medium text-gray-900 hover:underline">
@@ -156,24 +196,16 @@ const BrokerManagement = () => {
                       </div>
                     </div>
                   </td>
-
-                  {/* Location */}
                   <td className="px-6 py-4 text-sm text-slate-600">{broker.location}</td>
-                  
-                  {/* Performance */}
                   <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <div className="h-1.5 w-16 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-blue-500 rounded-full" style={{width: '60%'}}></div></div>
                         <span className="text-xs font-medium text-slate-600">{broker.performance}</span>
                       </div>
                   </td>
-
-                  {/* Status */}
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyles(broker.status)}`}>{broker.status}</span>
                   </td>
-                  
-                  {/* ACTIONS COLUMN */}
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
                       <button 
@@ -200,21 +232,31 @@ const BrokerManagement = () => {
         </div>
       </div>
 
-      {/* --- EDIT MODAL --- */}
+      {/* --- ADD / EDIT MODAL --- */}
       {isModalOpen && currentBroker && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 relative animate-in fade-in zoom-in duration-200">
             
-            {/* Modal Header */}
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-slate-900">Edit Broker</h2>
+              <h2 className="text-xl font-bold text-slate-900">
+                {modalMode === 'add' ? 'Add New Broker' : 'Edit Broker'}
+              </h2>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
                 <X size={20} />
               </button>
             </div>
 
-            {/* Edit Form */}
             <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Broker ID (Auto)</label>
+                <input 
+                  type="text" 
+                  value={currentBroker.id} 
+                  disabled
+                  className="w-full px-3 py-2 border border-gray-200 bg-gray-50 rounded-lg text-slate-500 cursor-not-allowed font-mono"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Name</label>
                 <input 
@@ -222,6 +264,7 @@ const BrokerManagement = () => {
                   name="name" 
                   value={currentBroker.name} 
                   onChange={handleInputChange} 
+                  placeholder={modalMode === 'add' ? "e.g. Sandesh (Auto-prefixes 'Agent')" : "Agent Name"}
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700"
                 />
               </div>
@@ -233,6 +276,7 @@ const BrokerManagement = () => {
                   name="email" 
                   value={currentBroker.email} 
                   onChange={handleInputChange} 
+                  placeholder="e.g. agent@example.com"
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-slate-700"
                 />
               </div>
@@ -263,7 +307,6 @@ const BrokerManagement = () => {
               </div>
             </div>
 
-            {/* Modal Actions */}
             <div className="flex items-center justify-end gap-3 mt-8">
               <button 
                 onClick={() => setIsModalOpen(false)}
@@ -275,7 +318,7 @@ const BrokerManagement = () => {
                 onClick={handleSave}
                 className="px-4 py-2 text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-sm transition-all"
               >
-                Save Changes
+                {modalMode === 'add' ? 'Create Broker' : 'Save Changes'}
               </button>
             </div>
           </div>
@@ -287,7 +330,6 @@ const BrokerManagement = () => {
   );
 };
 
-// Stat Card Component
 const StatCard = ({ title, value, sub, trend, icon, color }) => (
   <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-[0_2px_10px_-4px_rgba(6,81,237,0.1)] hover:shadow-md transition-shadow">
     <div className="flex justify-between items-start mb-4">
