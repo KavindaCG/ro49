@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import AllClients from './pages/AllClients';
 import Finance from './pages/Finance';
 import LoginSignup from './pages/LoginSignup';
+import AddClient from './pages/AddClient';
 import ClientDetails from './pages/ClientDetails';
 import ClientProfile from './pages/ClientProfile';
 import ApplicationDetails from './pages/ApplicationDetails';
@@ -66,6 +67,7 @@ class App extends React.Component {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/clients" element={<AllClients />} />
                 <Route path="/client-details" element={<ClientDetails />} />
+                <Route path="/add-client" element={<AddClient />} />
 
                 <Route path="/finance" element={<Finance />} />
                 <Route path="/login" element={<LoginSignup />} />

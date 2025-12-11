@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import hook for navigation
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 import { useTheme } from '../contexts/ThemeContext';
 
 import { 
@@ -81,7 +82,8 @@ const BrokerManagement = () => {
     <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
       <Sidebar />
 
-      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-24 transition-all duration-300 font-sans relative">
+      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-20 transition-all duration-300 font-sans relative">
+        <Header />
       
       <div className="p-8 max-w-[1600px] mx-auto">
         {/* HEADER */}

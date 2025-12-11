@@ -88,7 +88,7 @@ export default function AllClients() {
                 } border`}>
                 Export ⤓
               </button>
-              <Link to="/login" className={`px-4 py-2 rounded-full text-sm shadow-sm hover:bg-opacity-90 flex items-center gap-2
+              <Link to="/add-client" className={`px-4 py-2 rounded-full text-sm shadow-sm hover:bg-opacity-90 flex items-center gap-2
                 ${isDarkMode 
                   ? 'bg-blue-600 hover:bg-blue-700 text-white' 
                   : 'bg-gray-900 hover:bg-black text-white'

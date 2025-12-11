@@ -93,6 +93,7 @@ export default function ClientDetails() {
       <Sidebar />
 
       <main className="ml-64 flex-1 min-h-screen overflow-auto pt-20">
+        <Header />
       
       {/* Page Header */}
       <div className="flex flex-col gap-6 mb-8 px-8">

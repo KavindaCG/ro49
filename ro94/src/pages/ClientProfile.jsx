@@ -45,7 +45,8 @@ export default function ClientProfile() {
     <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
       <Sidebar />
 
-      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-24 pr-12 pb-12">
+      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-20 pr-12 pb-12">
+        <Header />
       
         {/* 1. Back Button */}
         <motion.button 
