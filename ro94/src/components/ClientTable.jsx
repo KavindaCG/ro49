@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function StatusPill({ status }) {
   const map = {
@@ -47,7 +48,12 @@ export default function ClientTable({ data = [] }) {
                 <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-400">
                   👤
                 </div>
-                <div className="text-gray-900 dark:text-white">{c.name}</div>
+                <Link
+                  to={`/clients/${c.id}`}
+                  className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+                >
+                  {c.name}
+                </Link>
               </td>
 
               <td className="px-4 py-4 text-sm text-gray-600 dark:text-gray-400">{c.email}</td>
@@ -62,9 +68,12 @@ export default function ClientTable({ data = [] }) {
 
               <td className="px-4 py-4 text-sm">
                 <div className="flex gap-2">
-                  <button className="px-3 py-1 rounded-full border text-sm border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <Link
+                    to={`/clients/${c.id}`}
+                    className="px-3 py-1 rounded-full border text-sm border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
                     View
-                  </button>
+                  </Link>
                   <button className="px-3 py-1 rounded-full border text-sm border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                     Edit
                   </button>

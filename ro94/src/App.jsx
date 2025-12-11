@@ -8,7 +8,9 @@ import AllApplications from './pages/AllApplications'; // Imported New Page
 import AllClients from './pages/AllClients';
 import AddClient from './pages/AddClient'; // Imported New Page
 import ClientDetails from './pages/ClientDetails'; 
+import ClientProfile from './pages/ClientProfile';
 import BrokerManagement from './pages/BrokerManagement'; // Imported New Page
+import BrokerDetails from './pages/BrokerDetails';
 import Finance from './pages/Finance';
 import LoginSignup from './pages/LoginSignup';
 import ApplicationDetails from './pages/ApplicationDetails';
@@ -67,10 +69,12 @@ class App extends React.Component {
                   <Route path="/clients" element={<AllClients />} />
                   <Route path="/add-client" element={<AddClient />} />
                   <Route path="/client-details" element={<ClientDetails />} />
-                  <Route path="/clients/:id" element={<ClientDetails />} />
+                  {/* Detailed client profile */}
+                  <Route path="/clients/:id" element={<ClientProfile />} />
 
                   {/* Broker Routes */}
                   <Route path="/brokers" element={<BrokerManagement />} />
+                  <Route path="/brokers/:id" element={<BrokerDetails />} />
 
                   {/* Finance Routes */}
                   <Route path="/finance" element={<Finance />} />
