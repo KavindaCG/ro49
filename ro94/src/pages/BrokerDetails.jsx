@@ -23,7 +23,6 @@ const BrokerDetails = () => {
   const { isDarkMode } = useTheme();
 
   // --- MOCK DATA FOR DEMO ---
-  // In a real app, fetch this data using the 'id'
   const brokerInfo = {
     id: id || 'ROB-001',
     name: 'Agent Smith',
@@ -53,173 +52,192 @@ const BrokerDetails = () => {
   // Helper for Client Status Styles
   const getClientStatusStyle = (status) => {
     switch (status) {
-      case 'Active': return 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20';
-      case 'Pending': return 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20';
-      default: return 'bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-500/10';
+      case 'Active': return isDarkMode ? 'bg-emerald-500/10 text-emerald-400 ring-1 ring-inset ring-emerald-500/20' : 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20';
+      case 'Pending': return isDarkMode ? 'bg-amber-500/10 text-amber-400 ring-1 ring-inset ring-amber-500/20' : 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20';
+      default: return isDarkMode ? 'bg-zinc-800 text-zinc-400 ring-1 ring-inset ring-zinc-700' : 'bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-500/10';
     }
   };
 
   return (
-    <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen flex transition-colors duration-300 ${isDarkMode ? 'bg-[#09090b] text-zinc-100' : 'bg-gray-50 text-gray-900'}`}>
       <Sidebar />
 
-      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-20 pb-12 transition-all duration-300 font-sans">
-        <Header />
-        <div className="max-w-[1200px] mx-auto px-8">
-
-          {/* NAVIGATION BACK */}
-          <button 
-            onClick={() => navigate(-1)} 
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-800 transition-colors mb-6 group"
-          >
-            <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm font-medium">Back to Brokers</span>
-          </button>
-
-          {/* --- TOP SECTION: PROFILE & STATS --- */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <main className="ml-64 flex-1 min-h-screen overflow-auto">
+        <div className="pt-20 pb-12 pl-8 pr-12">
+            <Header />
             
-            {/* 1. BROKER PROFILE CARD */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 lg:col-span-1">
-              <div className="flex flex-col items-center text-center pb-6 border-b border-gray-100">
-                <div className="w-24 h-24 rounded-full bg-slate-100 border-2 border-white shadow-lg flex items-center justify-center text-2xl font-bold text-slate-600 mb-4">
-                  {brokerInfo.name.substring(0, 2).toUpperCase()}
+            <div className="max-w-[1200px] mx-auto">
+
+            {/* NAVIGATION BACK - Modernized */}
+            <button 
+                onClick={() => navigate(-1)} 
+                className={`flex items-center gap-2 px-5 py-2.5 mb-8 rounded-full text-sm font-medium shadow-sm border transition-all group
+                ${isDarkMode 
+                    ? 'bg-[#18181b] border-zinc-800 text-zinc-300 hover:bg-zinc-800' 
+                    : 'bg-white border-gray-200 text-slate-600 hover:text-slate-900 hover:shadow-md'
+                }`}
+            >
+                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+                <span>Back to Brokers</span>
+            </button>
+
+            {/* --- TOP SECTION: PROFILE & STATS --- */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                
+                {/* 1. BROKER PROFILE CARD */}
+                <div className={`rounded-xl border shadow-sm p-6 lg:col-span-1
+                    ${isDarkMode ? 'bg-[#18181b] border-zinc-800' : 'bg-white border-gray-200'}`}>
+                    <div className={`flex flex-col items-center text-center pb-6 border-b
+                        ${isDarkMode ? 'border-zinc-800' : 'border-gray-100'}`}>
+                        <div className={`w-24 h-24 rounded-full border-2 shadow-lg flex items-center justify-center text-2xl font-bold mb-4
+                            ${isDarkMode ? 'bg-zinc-800 border-zinc-700 text-zinc-400' : 'bg-slate-100 border-white text-slate-600'}`}>
+                        {brokerInfo.name.substring(0, 2).toUpperCase()}
+                        </div>
+                        <h1 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{brokerInfo.name}</h1>
+                        <p className={`text-sm font-mono mt-1 ${isDarkMode ? 'text-zinc-500' : 'text-slate-500'}`}>{brokerInfo.id}</p>
+                        <div className="mt-3">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset
+                            ${isDarkMode ? 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20' : 'bg-emerald-50 text-emerald-700 ring-emerald-600/20'}`}>
+                            {brokerInfo.status}
+                        </span>
+                        </div>
+                    </div>
+                    
+                    <div className="pt-6 space-y-4">
+                        <InfoItem icon={Mail} text={brokerInfo.email} isDarkMode={isDarkMode} />
+                        <InfoItem icon={Phone} text={brokerInfo.phone} isDarkMode={isDarkMode} />
+                        <InfoItem icon={MapPin} text={brokerInfo.location} isDarkMode={isDarkMode} />
+                        <InfoItem icon={Calendar} text={`Joined ${brokerInfo.joinDate}`} isDarkMode={isDarkMode} />
+                    </div>
                 </div>
-                <h1 className="text-xl font-bold text-slate-900">{brokerInfo.name}</h1>
-                <p className="text-sm text-slate-500 font-mono mt-1">{brokerInfo.id}</p>
-                <div className="mt-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                    {brokerInfo.status}
-                  </span>
+
+                {/* 2. STATS GRID */}
+                <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                
+                {/* Total Clients Card */}
+                <div className={`p-6 rounded-xl border shadow-sm flex flex-col justify-between relative overflow-hidden group
+                    ${isDarkMode ? 'bg-[#18181b] border-zinc-800' : 'bg-white border-gray-200'}`}>
+                    <div className={`absolute right-0 top-0 w-24 h-24 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110
+                        ${isDarkMode ? 'bg-blue-500/10' : 'bg-blue-50'}`}></div>
+                    <div>
+                        <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-zinc-500' : 'text-slate-500'}`}>Total Referred Clients</p>
+                        <h3 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{totalClients}</h3>
+                    </div>
+                    <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                        <Users size={18} />
+                        <span>Lifetime referrals</span>
+                    </div>
                 </div>
-              </div>
-              
-              <div className="pt-6 space-y-4">
-                <div className="flex items-center gap-3 text-sm text-slate-600">
-                  <Mail size={16} className="text-slate-400" />
-                  {brokerInfo.email}
+
+                {/* Active Clients Card */}
+                <div className={`p-6 rounded-xl border shadow-sm flex flex-col justify-between relative overflow-hidden group
+                    ${isDarkMode ? 'bg-[#18181b] border-zinc-800' : 'bg-white border-gray-200'}`}>
+                    <div className={`absolute right-0 top-0 w-24 h-24 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110
+                        ${isDarkMode ? 'bg-emerald-500/10' : 'bg-emerald-50'}`}></div>
+                    <div>
+                        <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-zinc-500' : 'text-slate-500'}`}>Active Clients</p>
+                        <h3 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{activeClients}</h3>
+                    </div>
+                    <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                        <CheckCircle2 size={18} />
+                        <span>{activityRate}% Retention Rate</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-slate-600">
-                  <Phone size={16} className="text-slate-400" />
-                  {brokerInfo.phone}
+
+                {/* Commission Card */}
+                <div className={`p-6 rounded-xl border shadow-sm flex flex-col justify-between relative overflow-hidden group
+                    ${isDarkMode ? 'bg-[#18181b] border-zinc-800' : 'bg-white border-gray-200'}`}>
+                    <div className={`absolute right-0 top-0 w-24 h-24 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110
+                        ${isDarkMode ? 'bg-violet-500/10' : 'bg-violet-50'}`}></div>
+                    <div>
+                        <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-zinc-500' : 'text-slate-500'}`}>Total Commission Earned</p>
+                        <h3 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{brokerInfo.totalEarnings}</h3>
+                    </div>
+                    <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${isDarkMode ? 'text-violet-400' : 'text-violet-600'}`}>
+                        <Briefcase size={18} />
+                        <span>{brokerInfo.tier}</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-slate-600">
-                  <MapPin size={16} className="text-slate-400" />
-                  {brokerInfo.location}
+
+                {/* Pending Actions Card */}
+                <div className={`p-6 rounded-xl border shadow-sm flex flex-col justify-between relative overflow-hidden group
+                    ${isDarkMode ? 'bg-[#18181b] border-zinc-800' : 'bg-white border-gray-200'}`}>
+                    <div className={`absolute right-0 top-0 w-24 h-24 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110
+                        ${isDarkMode ? 'bg-amber-500/10' : 'bg-amber-50'}`}></div>
+                    <div>
+                        <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-zinc-500' : 'text-slate-500'}`}>Pending Approvals</p>
+                        <h3 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{totalClients - activeClients}</h3>
+                    </div>
+                    <div className={`mt-4 flex items-center gap-2 text-sm font-medium ${isDarkMode ? 'text-amber-400' : 'text-amber-600'}`}>
+                        <Clock size={18} />
+                        <span>Action Required</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-slate-600">
-                  <Calendar size={16} className="text-slate-400" />
-                  Joined {brokerInfo.joinDate}
+
                 </div>
-              </div>
             </div>
 
-            {/* 2. STATS GRID */}
-            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              
-              {/* Total Clients Card */}
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                <div className="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 mb-1">Total Referred Clients</p>
-                  <h3 className="text-3xl font-bold text-slate-900">{totalClients}</h3>
+            {/* --- BOTTOM SECTION: CLIENT LIST --- */}
+            <div className={`rounded-xl border shadow-sm overflow-hidden
+                ${isDarkMode ? 'bg-[#18181b] border-zinc-800' : 'bg-white border-gray-200'}`}>
+                <div className={`px-6 py-5 border-b flex justify-between items-center
+                    ${isDarkMode ? 'border-zinc-800' : 'border-gray-100'}`}>
+                <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Referral History</h3>
+                <button className="text-sm text-blue-600 hover:text-blue-500 font-medium flex items-center gap-1">
+                    View All <ExternalLink size={14} />
+                </button>
                 </div>
-                <div className="mt-4 flex items-center gap-2 text-sm text-blue-600 font-medium">
-                  <Users size={18} />
-                  <span>Lifetime referrals</span>
-                </div>
-              </div>
-
-              {/* Active Clients Card */}
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                 <div className="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 mb-1">Active Clients</p>
-                  <h3 className="text-3xl font-bold text-slate-900">{activeClients}</h3>
-                </div>
-                <div className="mt-4 flex items-center gap-2 text-sm text-emerald-600 font-medium">
-                  <CheckCircle2 size={18} />
-                  <span>{activityRate}% Retention Rate</span>
-                </div>
-              </div>
-
-              {/* Commission Card */}
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                 <div className="absolute right-0 top-0 w-24 h-24 bg-violet-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 mb-1">Total Commission Earned</p>
-                  <h3 className="text-3xl font-bold text-slate-900">{brokerInfo.totalEarnings}</h3>
-                </div>
-                <div className="mt-4 flex items-center gap-2 text-sm text-violet-600 font-medium">
-                  <Briefcase size={18} />
-                  <span>{brokerInfo.tier}</span>
-                </div>
-              </div>
-
-              {/* Pending Actions Card */}
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-                 <div className="absolute right-0 top-0 w-24 h-24 bg-amber-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
-                <div>
-                  <p className="text-sm font-medium text-slate-500 mb-1">Pending Approvals</p>
-                  <h3 className="text-3xl font-bold text-slate-900">{totalClients - activeClients}</h3>
-                </div>
-                <div className="mt-4 flex items-center gap-2 text-sm text-amber-600 font-medium">
-                  <Clock size={18} />
-                  <span>Action Required</span>
-                </div>
-              </div>
+                
+                <table className="w-full text-left border-collapse">
+                <thead>
+                    <tr className={`text-xs uppercase border-b
+                        ${isDarkMode ? 'bg-zinc-900/50 text-zinc-500 border-zinc-800' : 'bg-gray-50/50 text-slate-500 border-gray-100'}`}>
+                    <th className="px-6 py-4 font-semibold">Client Name</th>
+                    <th className="px-6 py-4 font-semibold">Joined Date</th>
+                    <th className="px-6 py-4 font-semibold">Investment Value</th>
+                    <th className="px-6 py-4 font-semibold text-center">Current Status</th>
+                    </tr>
+                </thead>
+                <tbody className={`divide-y ${isDarkMode ? 'divide-zinc-800' : 'divide-gray-100'}`}>
+                    {referredClients.map((client) => (
+                    <tr key={client.id} className={`transition-colors
+                        ${isDarkMode ? 'hover:bg-zinc-800/50' : 'hover:bg-slate-50/50'}`}>
+                        <td className="px-6 py-4">
+                        <div className="flex flex-col">
+                            <span className={`text-sm font-medium ${isDarkMode ? 'text-zinc-200' : 'text-slate-900'}`}>{client.name}</span>
+                            <span className={`text-xs font-mono ${isDarkMode ? 'text-zinc-500' : 'text-slate-400'}`}>{client.id}</span>
+                        </div>
+                        </td>
+                        <td className={`px-6 py-4 text-sm ${isDarkMode ? 'text-zinc-400' : 'text-slate-600'}`}>
+                        {client.date}
+                        </td>
+                        <td className={`px-6 py-4 text-sm font-medium ${isDarkMode ? 'text-zinc-200' : 'text-slate-900'}`}>
+                        {client.investment}
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getClientStatusStyle(client.status)}`}>
+                            {client.status}
+                        </span>
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
+                </table>
+            </div>
 
             </div>
-          </div>
-
-          {/* --- BOTTOM SECTION: CLIENT LIST --- */}
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center">
-              <h3 className="font-bold text-slate-800">Referral History</h3>
-              <button className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-                View All <ExternalLink size={14} />
-              </button>
-            </div>
-            
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-gray-50/50 text-xs text-slate-500 uppercase border-b border-gray-100">
-                  <th className="px-6 py-4 font-semibold">Client Name</th>
-                  <th className="px-6 py-4 font-semibold">Joined Date</th>
-                  <th className="px-6 py-4 font-semibold">Investment Value</th>
-                  <th className="px-6 py-4 font-semibold text-center">Current Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {referredClients.map((client) => (
-                  <tr key={client.id} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-slate-900">{client.name}</span>
-                        <span className="text-xs text-slate-400 font-mono">{client.id}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-600">
-                      {client.date}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-900 font-medium">
-                      {client.investment}
-                    </td>
-                    <td className="px-6 py-4 text-center">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getClientStatusStyle(client.status)}`}>
-                        {client.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
         </div>
       </main>
     </div>
   );
 };
+
+// Helper Subcomponent for Profile Info
+const InfoItem = ({ icon: Icon, text, isDarkMode }) => (
+    <div className={`flex items-center gap-3 text-sm ${isDarkMode ? 'text-zinc-400' : 'text-slate-600'}`}>
+        <Icon size={16} className={isDarkMode ? 'text-zinc-600' : 'text-slate-400'} />
+        {text}
+    </div>
+);
 
 export default BrokerDetails;
