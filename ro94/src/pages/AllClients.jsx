@@ -4,6 +4,8 @@ import Header from '../components/Header';
 import ClientTable from '../components/ClientTable';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+// 1. Import icons for the cards
+import { Users, CheckCircle, RotateCcw } from 'lucide-react';
 
 export default function AllClients() {
   const { isDarkMode } = useTheme();
@@ -23,6 +25,39 @@ export default function AllClients() {
 
   const [clients] = useState(initial);
   const [query, setQuery] = useState('');
+
+  // --- 2. Calculate Stats Dynamically ---
+  const totalClients = clients.length;
+  const completedCount = clients.filter(c => c.status === 'Completed').length;
+  const returnDocsCount = clients.filter(c => c.status === 'Return Docs').length;
+
+  // --- 3. Define Card Layout & Styles ---
+  const stats = [
+    { 
+      label: 'TOTAL CLIENTS', 
+      value: totalClients, 
+      sub: 'Total Database', 
+      icon: <Users size={22} />, 
+      color: 'text-blue-600', 
+      bg: 'bg-blue-100' 
+    },
+    { 
+      label: 'COMPLETED', 
+      value: completedCount, 
+      sub: 'Successfully finished', 
+      icon: <CheckCircle size={22} />, 
+      color: 'text-emerald-600', 
+      bg: 'bg-emerald-100' 
+    },
+    { 
+      label: 'RETURN DOCS', 
+      value: returnDocsCount, 
+      sub: 'Action Required', 
+      icon: <RotateCcw size={22} />, 
+      color: 'text-orange-600', 
+      bg: 'bg-orange-100' 
+    },
+  ];
 
   const filtered = clients.filter(
     (c) =>
@@ -46,6 +81,37 @@ export default function AllClients() {
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               Search, filter and manage your client records.
             </p>
+          </div>
+
+          {/* --- 4. Render Analytics Cards --- */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {stats.map((stat, index) => (
+              <div 
+                key={index} 
+                className={`p-5 rounded-2xl border shadow-sm flex flex-col justify-between h-32 hover:shadow-md transition-shadow
+                  ${isDarkMode 
+                    ? 'bg-gray-800 border-gray-700' 
+                    : 'bg-white border-gray-200'
+                  }`}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className={`text-[11px] font-bold uppercase tracking-wider mb-1 ${isDarkMode ? 'text-gray-400' : 'text-slate-400'}`}>
+                      {stat.label}
+                    </p>
+                    <h3 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                      {stat.value}
+                    </h3>
+                  </div>
+                  <div className={`p-3 rounded-xl ${stat.bg} ${stat.color}`}>
+                    {stat.icon}
+                  </div>
+                </div>
+                <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-500' : 'text-slate-400'}`}>
+                  {stat.sub}
+                </p>
+              </div>
+            ))}
           </div>
 
           <div className="flex items-center gap-4 mb-6">

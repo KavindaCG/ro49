@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // --- Imports ---
 import Sidebar from './components/Sidebar'; 
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/AdminDashboard';
 import AllApplications from './pages/AllApplications'; // Imported New Page
 import AllClients from './pages/AllClients';
 import AddClient from './pages/AddClient'; // Imported New Page
@@ -15,6 +15,8 @@ import Finance from './pages/Finance';
 import LoginSignup from './pages/LoginSignup';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Settings from './pages/Settings';
+import ClientDashboard from './pages/ClientDashboard';
+import ClientApplicationDetails from './pages/ClientApplicationDetails';
 import { ThemeProvider } from './contexts/ThemeContext';
 
 // Error Boundary (Unchanged)
@@ -60,6 +62,10 @@ class App extends React.Component {
                   
                   {/* Dashboard */}
                   <Route path="/dashboard" element={<Dashboard />} />
+
+                  {/* Client-facing Dashboard (no auth restrictions) */}
+                  <Route path="/client" element={<ClientDashboard />} />
+                  <Route path="/client/applications/:id" element={<ClientApplicationDetails />} />
 
                   {/* Applications Routes */}
                   <Route path="/applications" element={<AllApplications />} />
