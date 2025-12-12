@@ -1,8 +1,17 @@
 import React from 'react';
+import { 
+  Users, 
+  FileText, 
+  CreditCard, 
+  Plus, 
+  Download, 
+  Clock, 
+  ChevronRight,
+  MoreHorizontal
+} from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import StatCard from '../components/StatCard';
-import ProgressCard from '../components/ProgressCard';
 import SimpleDonutChart from '../components/charts/SimpleDonutChart';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -10,183 +19,164 @@ export default function Dashboard() {
   const { isDarkMode } = useTheme();
 
   return (
-    <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-      <Sidebar />
+    <div className={`min-h-screen flex font-sans transition-colors duration-300
+      ${isDarkMode ? 'bg-[#09090b] text-zinc-100' : 'bg-gray-50 text-gray-900'}`}>
       
-      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-20">
-        <Header />
+      <Sidebar />
+      <Header />
+      
+      {/* Added pt-24 to account for fixed header + breathing room */}
+      <main className="ml-64 flex-1 min-h-screen overflow-auto pt-24 px-8 pb-12">
         
-        {/* Content container */}
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          {/* Welcome section */}
-          <div className="mb-10">
-            <h1 className={`text-3xl font-semibold tracking-tight mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Dashboard
-            </h1>
-            <p className={`text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              Overview of clients, applications, and performance metrics
-            </p>
-          </div>
+        {/* If you have a fixed Header component, ensure it doesn't overlap. 
+            If Header is part of the flow, remove the pt-24 and use pt-8. 
+            Assuming Header is fixed at top: */}
+        
+        <div className="max-w-[1600px] mx-auto">
           
-          {/* Stats grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Section: Header - Fixed Alignment */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+            <div>
+              <h1 className={`text-3xl font-bold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Dashboard
+              </h1>
+              <p className="mt-1 text-gray-500 dark:text-zinc-400">
+                Overview of your client portfolio and performance.
+              </p>
+            </div>
+            
+            {/* Action Button - Centered vertically with title */}
+            <button className={`
+              flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-all
+              ${isDarkMode 
+                ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-zinc-800' 
+                : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 shadow-sm'
+              }
+            `}>
+              Last 30 Days <ChevronRight size={14} />
+            </button>
+          </div>
+
+          {/* Section: Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <StatCard 
               title="Total Clients" 
-              value="10"
-              trend="+2 this month"
-              icon="👥"
-              darkMode={isDarkMode}
+              value="842"
+              note="+12% vs last month"
+              icon={Users}
+              isDarkMode={isDarkMode}
             />
             <StatCard 
-              title="Applications" 
+              title="Active Applications" 
               value="32"
-              trend="+12% from last month"
-              icon="📄"
-              darkMode={isDarkMode}
+              note="+4 new today"
+              icon={FileText}
+              isDarkMode={isDarkMode}
             />
             <StatCard 
-              title="Total Refunds" 
+              title="Total Revenue" 
               value="$23,456"
-              trend="Processing"
-              icon="💰"
-              darkMode={isDarkMode}
+              note="Processing"
+              icon={CreditCard}
+              isDarkMode={isDarkMode}
             />
           </div>
-          
-          {/* Charts and metrics grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div className={`rounded-2xl shadow-sm p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-              <div className="flex justify-between items-center mb-6">
-                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Processing Timeline
-                </h3>
-                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
-                  Last 30 days
-                </span>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                      Document Completion
-                    </span>
-                    <span className={isDarkMode ? 'font-medium text-gray-100' : 'font-medium'}>94%</span>
-                  </div>
-                  <div className={`h-2 rounded-full overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '94%' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                      Broker Performance
-                    </span>
-                    <span className={isDarkMode ? 'font-medium text-gray-100' : 'font-medium'}>89.5%</span>
-                  </div>
-                  <div className={`h-2 rounded-full overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                    <div className="h-full bg-green-500 rounded-full" style={{ width: '89.5%' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+          {/* Section: Bento Grid Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             
-            <div className={`rounded-2xl shadow-sm p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            {/* 1. Processing Timeline */}
+            <div className={`p-6 rounded-2xl border shadow-sm transition-colors
+              ${isDarkMode 
+                ? 'bg-[#18181b] border-zinc-800' 
+                : 'bg-white border-gray-200'
+              }`}>
               <div className="flex justify-between items-center mb-6">
-                <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Avg. Processing Time
-                </h3>
-                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
-                  Current period
-                </span>
-              </div>
-              <div className="flex items-end gap-4">
-                <div className={`text-5xl font-light tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  4
-                </div>
-                <div className="mb-2">
-                  <div className={`text-lg font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    days
-                  </div>
-                  <div className="text-sm text-green-600">-1 day from last period</div>
-                </div>
-              </div>
-              <div className={`mt-6 pt-6 ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} border-t`}>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Goal: Reduce to 3 days by next quarter
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Cases overview */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <div className={`rounded-2xl shadow-sm p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Cases Overview
-                  </h3>
-                  <button className={`text-sm font-medium ${isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'}`}>
-                    View all →
-                  </button>
-                </div>
-                <SimpleDonutChart
-                  title="Cases by Status"
-                  labels={['Active', 'Completed', 'On Hold', 'Rejected']}
-                  series={[12, 32, 5, 3]}
-                  darkMode={isDarkMode}
-                />
-              </div>
-            </div>
-            
-            <div className={`rounded-2xl shadow-sm p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-              <h3 className={`text-lg font-semibold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Quick Actions
-              </h3>
-              <div className="space-y-3">
-                <button className={`w-full text-left p-4 rounded-xl transition-colors
-                  ${isDarkMode 
-                    ? 'border-gray-700 hover:border-gray-600 hover:bg-gray-700' 
-                    : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
-                  } border`}>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center
-                      ${isDarkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
-                      <span className={isDarkMode ? 'text-blue-400' : 'text-blue-600'}>📋</span>
-                    </div>
-                    <div>
-                      <div className={`font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                        New Application
-                      </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Start processing a new case
-                      </div>
-                    </div>
-                  </div>
-                </button>
-                
-                <button className={`w-full text-left p-4 rounded-xl transition-colors
-                  ${isDarkMode 
-                    ? 'border-gray-700 hover:border-gray-600 hover:bg-gray-700' 
-                    : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
-                  } border`}>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center
-                      ${isDarkMode ? 'bg-green-900/30' : 'bg-green-50'}`}>
-                      <span className={isDarkMode ? 'text-green-400' : 'text-green-600'}>📊</span>
-                    </div>
-                    <div>
-                      <div className={`font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                        Generate Report
-                      </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        Export monthly analytics
-                      </div>
-                    </div>
-                  </div>
+                <h3 className="font-semibold text-gray-900 dark:text-white">Processing Metrics</h3>
+                <button className="text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200">
+                  <MoreHorizontal size={18} />
                 </button>
               </div>
+
+              <div className="space-y-6">
+                <div className="group">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-500 dark:text-zinc-500 font-medium">Document Verification</span>
+                    <span className="text-gray-900 dark:text-white font-bold">94%</span>
+                  </div>
+                  <div className="h-2 w-full bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-600 rounded-full w-[94%]" />
+                  </div>
+                </div>
+
+                <div className="group">
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="text-gray-500 dark:text-zinc-500 font-medium">Broker Response Rate</span>
+                    <span className="text-gray-900 dark:text-white font-bold">89.5%</span>
+                  </div>
+                  <div className="h-2 w-full bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-gray-900 dark:bg-white rounded-full w-[89.5%]" />
+                  </div>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-gray-100 dark:border-zinc-800">
+                   <div className="flex items-center gap-4">
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl">
+                        <Clock size={20} />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">4.2 days</div>
+                        <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">Avg Turnaround</div>
+                      </div>
+                   </div>
+                </div>
+              </div>
             </div>
+
+            {/* 2. Cases Donut Chart */}
+            <div className={`p-6 rounded-2xl border shadow-sm transition-colors
+              ${isDarkMode 
+                ? 'bg-[#18181b] border-zinc-800' 
+                : 'bg-white border-gray-200'
+              }`}>
+              <SimpleDonutChart
+                title="Case Distribution"
+                labels={['Processing', 'Completed', 'On Hold', 'Rejected']}
+                series={[12, 32, 5, 3]}
+              />
+            </div>
+
+            {/* 3. Quick Actions */}
+            <div className="flex flex-col gap-4">
+               {/* Tile 1 */}
+               <button className="flex-1 p-6 text-left rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all hover:-translate-y-1 border border-transparent">
+                 <div className="bg-white/20 w-10 h-10 rounded-lg flex items-center justify-center mb-4 backdrop-blur-sm">
+                   <Plus size={20} />
+                 </div>
+                 <h3 className="text-lg font-bold">New Application</h3>
+                 <p className="text-blue-100 text-sm mt-1">Start a new client case</p>
+               </button>
+
+               {/* Tile 2 */}
+               <button className={`flex-1 p-6 text-left rounded-2xl border transition-all group shadow-sm
+                 ${isDarkMode 
+                   ? 'bg-[#18181b] border-zinc-800 hover:border-zinc-700' 
+                   : 'bg-white border-gray-200 hover:border-gray-300 hover:shadow-md'
+                 }`}>
+                 <div className="flex justify-between items-start mb-4">
+                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors
+                      ${isDarkMode 
+                        ? 'bg-zinc-800 text-zinc-400 group-hover:bg-white group-hover:text-black' 
+                        : 'bg-gray-100 text-gray-600 group-hover:bg-black group-hover:text-white'
+                      }`}>
+                      <Download size={20} />
+                    </div>
+                 </div>
+                 <h3 className="text-lg font-bold text-gray-900 dark:text-white">Generate Report</h3>
+                 <p className="text-gray-500 text-sm mt-1">Export monthly analytics</p>
+               </button>
+            </div>
+
           </div>
         </div>
       </main>
