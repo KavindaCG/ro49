@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Menu } from 'lucide-react';
 
 // --- Imports ---
 import Sidebar from './components/Sidebar';
@@ -63,11 +64,26 @@ const RootRedirector = () => {
 
 // 2. Admin Layout
 const AdminLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="flex-1">
-        {children}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* Main Content Wrapper */}
+      <div className="flex flex-col md:ml-64 min-h-screen transition-all duration-300 relative">
+
+        {/* Mobile Header */}
+        <div className="md:hidden sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center shadow-sm">
+          <button onClick={() => setSidebarOpen(true)} className="text-gray-600 dark:text-gray-300">
+            <Menu size={24} />
+          </button>
+          <span className="ml-4 font-bold text-lg text-gray-900 dark:text-white">RO94</span>
+        </div>
+
+        <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
+          {children}
+        </main>
       </div>
     </div>
   );
@@ -75,11 +91,26 @@ const AdminLayout = ({ children }) => {
 
 // 3. Client Layout
 const ClientLayout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar />
-      <div className="flex-1">
-        {children}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* Main Content Wrapper */}
+      <div className="flex flex-col md:ml-64 min-h-screen transition-all duration-300 relative">
+
+        {/* Mobile Header */}
+        <div className="md:hidden sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center shadow-sm">
+          <button onClick={() => setSidebarOpen(true)} className="text-gray-600 dark:text-gray-300">
+            <Menu size={24} />
+          </button>
+          <span className="ml-4 font-bold text-lg text-gray-900 dark:text-white">RO94</span>
+        </div>
+
+        <main className="flex-1 w-full max-w-[100vw] overflow-x-hidden">
+          {children}
+        </main>
       </div>
     </div>
   );
